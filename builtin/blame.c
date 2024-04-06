@@ -342,6 +342,7 @@ static const char *format_time(timestamp_t time, const char *tz_str,
 #define OUTPUT_LINE_PORCELAIN       (1U<<9)
 #define OUTPUT_COLOR_LINE           (1U<<10)
 #define OUTPUT_SHOW_AGE_WITH_COLOR  (1U<<11)
+#define OUTPUT_SHOW_SUMMARY         (1U<<12)
 
 static void emit_porcelain_details(struct blame_origin *suspect, int repeat)
 {
@@ -536,6 +537,10 @@ static void emit_other(struct blame_scoreboard *sb, struct blame_entry *ent, int
 						   ci.author_tz.buf,
 						   show_raw_time));
 			}
+
+			if (opt & OUTPUT_SHOW_SUMMARY)
+				printf(" %-40.40s", ci.summary.buf);
+
 			printf(" %*d) ",
 			       max_digits, ent->lno + 1 + cnt);
 		}
@@ -892,6 +897,7 @@ int cmd_blame(int argc, const char **argv, const char *prefix)
 		OPT_BIT('c', NULL, &output_option, N_("use the same output mode as git-annotate (Default: off)"), OUTPUT_ANNOTATE_COMPAT),
 		OPT_BIT('t', NULL, &output_option, N_("show raw timestamp (Default: off)"), OUTPUT_RAW_TIMESTAMP),
 		OPT_BIT('l', NULL, &output_option, N_("show long commit SHA1 (Default: off)"), OUTPUT_LONG_OBJECT_NAME),
+		OPT_BIT('m', NULL, &output_option, N_("show commit summary (Default: off)"), OUTPUT_SHOW_SUMMARY),
 		OPT_BIT('s', NULL, &output_option, N_("suppress author name and timestamp (Default: off)"), OUTPUT_NO_AUTHOR),
 		OPT_BIT('e', "show-email", &output_option, N_("show author email instead of name (Default: off)"), OUTPUT_SHOW_EMAIL),
 		OPT_BIT('w', NULL, &xdl_opts, N_("ignore whitespace differences"), XDF_IGNORE_WHITESPACE),
